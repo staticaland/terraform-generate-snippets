@@ -36,22 +36,40 @@ for item in os.scandir("providers"):
 
         for resource_name, resource_schema in resource_schemas.items():
 
-            print(f'resource "{resource_name}" "{{$1:name}}" {{')
+            snippet = []
+
+            snippet.append("# -*- mode: snippet -*-")
+            snippet.append(f"# name: r_{resource_name}")
+            snippet.append(f"# key: r_{resource_name}")
+            snippet.append("# --")
+
+            snippet.append(f'resource "{resource_name}" "{{$1:name}}" {{')
+
             attributes = resource_schema.get("block").get("attributes")
 
-            for pos, attribute in enumerate(attributes, start=1):
-                print(f'    {attribute} = "{{${pos}:{attribute}}}"')
+            for pos, attribute in enumerate(attributes, start=2):
+                snippet.append(f'    {attribute} = "{{${pos}:{attribute}}}"')
 
-            print("}")
+            snippet.append("}")
+
+            with open(f"snippets/terraform-mode/r_{resource_name}", "w") as f:
+                f.write("\n".join(snippet))
 
         data_source_schemas = data.get("provider_schemas").get(item.name).get("data_source_schemas")
 
         for data_source_name, data_source_schema in data_source_schemas.items():
 
+            print()
+            print("# -*- mode: snippet -*-")
+            print(f"# name: r_{data_source_name}")
+            print(f"# key: r_{data_source_name}")
+            print("# --")
+
             print(f'data "{data_source_name}" "{{$1:name}}" {{')
+
             attributes = data_source_schema.get("block").get("attributes")
 
-            for pos, attribute in enumerate(attributes, start=1):
+            for pos, attribute in enumerate(attributes, start=2):
                 print(f'    {attribute} = "{{${pos}:{attribute}}}"')
 
             print("}")
