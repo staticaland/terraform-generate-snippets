@@ -1,0 +1,4 @@
+#+TITLE: terraform-generate-snippets
+
+The idea here is to generate [[https://github.com/joaotavora/yasnippet][YASnippet]] snippets from [[https://www.terraform.io/docs/commands/providers/schema.html][=terraform providers schema
+-json=]].
