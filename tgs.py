@@ -91,14 +91,14 @@ def main():
                 snippet.append(f"# key: r_{resource_name}")
                 snippet.append("# --")
 
-                snippet.append(f'resource "{resource_name}" "{{$1:name}}" {{')
+                snippet.append(f'resource "{resource_name}" "${{1:name}}" {{')
 
 
                 attributes = resource_schema.get("block").get("attributes")
 
                 for pos, attribute in enumerate(attributes, start=2):
                     if attributes.get(attribute).get("required") == True:
-                        snippet.append(f'    {attribute} = "{{${pos}:{attribute}}}"')
+                        snippet.append(f'    {attribute} = "${{{pos}:{attribute}}}"')
 
                 snippet.append("}")
 
