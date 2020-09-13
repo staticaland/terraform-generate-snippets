@@ -1,4 +1,13 @@
-The idea here is to generate
-[YASnippet](https://github.com/joaotavora/yasnippet) snippets from [`terraform
-providers schema
--json`](https://www.terraform.io/docs/commands/providers/schema.html).
+Generate editor snippets based on Terraform provider schemas.
+
+Parses [`terraform providers schema
+-json`](https://www.terraform.io/docs/commands/providers/schema.html) and
+creates snippet files based on the JSON.
+
+- [x] YASnippet support
+- [ ] Support templates for multiple engines
+
+Currently only supporting AWS and Azure for
+[YASnippet](https://github.com/joaotavora/yasnippet), but should be fairly easy
+to extend.
+
