@@ -6,70 +6,112 @@ import subprocess
 import io
 
 
-for item in os.scandir("providers"):
+def make_data_source_snippet(data_source_schemas):
 
-    out_bytes = False
+    for data_source_name, data_source_schema in data_source_schemas.items():
+
+        yield ("# -*- mode: snippet -*-")
+        yield (f"# name: r_{data_source_name}")
+        yield (f"# key: r_{data_source_name}")
+        yield ("# --")
+
+        yield (f'data "{data_source_name}" "{{$1:name}}" {{')
+
+        attributes = data_source_schema.get("block").get("attributes")
+
+        for pos, attribute in enumerate(attributes, start=2):
+            yield (f'    {attribute} = "{{${pos}:{attribute}}}"')
+
+        yield ("}")
+
+
+def get_terraform_schema(provider_path):
+
+    cmd = ["terraform", "providers", "schema", "-json"]
 
     try:
+
         out_bytes = subprocess.check_output(
-            ["terraform", "providers", "schema", "-json"],
-            cwd=item.path,
+            cmd,
+            cwd=provider_path,
             stderr=subprocess.STDOUT,
         )
+
+        return out_bytes
+
     except subprocess.CalledProcessError as e:
+
         if "no suitable version installed" in e.output.decode("utf-8"):
+
             subprocess.run(
-                ["terraform", "init"], cwd=item.path, stderr=subprocess.STDOUT
+                ["terraform", "init"], cwd=provider_path, stderr=subprocess.STDOUT
             )
+
             out_bytes = subprocess.check_output(
-                ["terraform", "providers", "schema", "-json"],
-                cwd=item.path,
+                cmd,
+                cwd=provider_path,
                 stderr=subprocess.STDOUT,
             )
 
-    if out_bytes:
+            return out_bytes
 
-        f = io.BytesIO(out_bytes)
-        data = json.load(f)
 
-        resource_schemas = data.get("provider_schemas").get(item.name).get("resource_schemas")
+def write_snippet_to_path(snippet):
 
-        for resource_name, resource_schema in resource_schemas.items():
+    snippet_type = "hello"
+    snippet_name = "hello"
 
-            snippet = []
+    with open(f"snippets/terraform-mode/{snippet_type}_{snippet_name}", "w") as f:
+        f.write("\n".join(snippet))
 
-            snippet.append("# -*- mode: snippet -*-")
-            snippet.append(f"# name: r_{resource_name}")
-            snippet.append(f"# key: r_{resource_name}")
-            snippet.append("# --")
 
-            snippet.append(f'resource "{resource_name}" "{{$1:name}}" {{')
+def main():
 
-            attributes = resource_schema.get("block").get("attributes")
+    for dir_entry in os.scandir("providers"):
 
-            for pos, attribute in enumerate(attributes, start=2):
-                snippet.append(f'    {attribute} = "{{${pos}:{attribute}}}"')
+        print(dir_entry.path)
 
-            snippet.append("}")
+        json_schema_bytes = get_terraform_schema(dir_entry.path)
 
-            with open(f"snippets/terraform-mode/r_{resource_name}", "w") as f:
-                f.write("\n".join(snippet))
+        if json_schema_bytes:
 
-        data_source_schemas = data.get("provider_schemas").get(item.name).get("data_source_schemas")
+            f = io.BytesIO(json_schema_bytes)
+            provider_schemas = json.load(f).get("provider_schemas")
 
-        for data_source_name, data_source_schema in data_source_schemas.items():
+            resource_schemas = (
+                provider_schemas.get(dir_entry.name).get("resource_schemas")
+            )
 
-            print()
-            print("# -*- mode: snippet -*-")
-            print(f"# name: r_{data_source_name}")
-            print(f"# key: r_{data_source_name}")
-            print("# --")
+            for resource_name, resource_schema in resource_schemas.items():
 
-            print(f'data "{data_source_name}" "{{$1:name}}" {{')
+                snippet = []
 
-            attributes = data_source_schema.get("block").get("attributes")
+                snippet.append("# -*- mode: snippet -*-")
+                snippet.append(f"# name: r_{resource_name}")
+                snippet.append(f"# key: r_{resource_name}")
+                snippet.append("# --")
 
-            for pos, attribute in enumerate(attributes, start=2):
-                print(f'    {attribute} = "{{${pos}:{attribute}}}"')
+                snippet.append(f'resource "{resource_name}" "{{$1:name}}" {{')
 
-            print("}")
+
+                attributes = resource_schema.get("block").get("attributes")
+
+                for pos, attribute in enumerate(attributes, start=2):
+                    if attributes.get(attribute).get("required") == True:
+                        snippet.append(f'    {attribute} = "{{${pos}:{attribute}}}"')
+
+                snippet.append("}")
+
+                with open(f"snippets/terraform-mode/r_{resource_name}", "w") as f:
+                    f.write("\n".join(snippet))
+
+            data_source_schemas = (
+                provider_schemas.get(dir_entry.name).get("data_source_schemas")
+            )
+
+            print("\n".join(make_data_source_snippet(data_source_schemas)))
+
+
+if __name__ == "__main__":
+
+    main()
