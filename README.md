@@ -12,3 +12,8 @@ creates snippet files based on the JSON.
 Currently only supporting AWS and Azure for
 [YASnippet](https://github.com/joaotavora/yasnippet), but should be fairly easy
 to extend (just create a provider folder).
+
+Snippet documentation for various editors:
+
+- [YASnippet](https://joaotavora.github.io/yasnippet/snippet-development.html)
+- [VSCode](https://code.visualstudio.com/docs/editor/userdefinedsnippets) follows the TextMate snippet syntax
