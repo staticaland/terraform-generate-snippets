@@ -1,7 +1,7 @@
 Generate editor snippets based on Terraform provider schemas (such as
 [AWS](https://github.com/terraform-providers/terraform-provider-aws/tree/master/aws)).
 
-Parses [`terraform providers schema
+Works by parsing [`terraform providers schema
 -json`](https://www.terraform.io/docs/commands/providers/schema.html) and
 creates snippet files based on the JSON.
 
@@ -11,5 +11,4 @@ creates snippet files based on the JSON.
 
 Currently only supporting AWS and Azure for
 [YASnippet](https://github.com/joaotavora/yasnippet), but should be fairly easy
-to extend.
-
+to extend (just create a provider folder).
