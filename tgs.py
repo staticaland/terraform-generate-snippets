@@ -9,8 +9,8 @@ import jinja2
 
 JINJA_TEMPLATE = """
 # -*- mode: snippet -*-
-# name: r_[[name]]
-# key: r_[[name]]
+# name: [[thing_short]]_[[name]]
+# key: [[thing_short]]_[[name]]
 # --
 
 [[thing]] "[[name]]" "${1:this}" {
@@ -89,11 +89,15 @@ def main():
 
             for resource_name, resource_schema in resource_schemas.items():
 
+                attributes = resource_schema.get("block").get("attributes")
+                attributes = [a for a in attributes if attributes.get(a).get("required") == True]
+
                 snippet = template.render(
                     thing="resource",
+                    thing_short="r",
                     name=resource_name,
                     enumerated_attributes=enumerate(
-                        resource_schema.get("block").get("attributes"), start=2
+                        attributes, start=2
                     ),
                 )
 
@@ -104,11 +108,15 @@ def main():
 
             for data_source_name, data_source_schema in data_source_schemas.items():
 
+                attributes = data_source_schema.get("block").get("attributes")
+                attributes = [a for a in attributes if attributes.get(a).get("required") == True]
+
                 snippet = template.render(
                     thing="data",
+                    thing_short="d",
                     name=data_source_name,
                     enumerated_attributes=enumerate(
-                        data_source_schema.get("block").get("attributes"), start=2
+                        attributes, start=2
                     ),
                 )
 
