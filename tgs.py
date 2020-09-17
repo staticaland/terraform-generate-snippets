@@ -4,11 +4,11 @@ import json
 import os
 import subprocess
 import io
+import pathlib
 
 import jinja2
 
-JINJA_TEMPLATE = """
-# -*- mode: snippet -*-
+JINJA_TEMPLATE = """# -*- mode: snippet -*-
 # name: [[thing_short]]_[[name]]
 # key: [[thing_short]]_[[name]]
 # --
@@ -69,9 +69,9 @@ def main():
             # Get the first dict key
             schemas = next(iter(provider_schemas.values()))
 
-            resource_schemas = schemas.get("resource_schemas")
+            resource_schemas = schemas.get(key="resource_schemas", default={})
 
-            data_source_schemas = schemas.get("data_source_schemas")
+            data_source_schemas = schemas.get(key="data_source_schemas", default={})
 
             environment = jinja2.Environment(
                 loader=jinja2.BaseLoader(),
@@ -85,46 +85,49 @@ def main():
 
             template = environment.from_string(JINJA_TEMPLATE)
 
-            print(f"Loaded schema JSON for {dir_entry.name} - templating and writing snippet files")
+            print(
+                f"Loaded schema JSON for {dir_entry.name} - templating and writing snippet files"
+            )
 
             for resource_name, resource_schema in resource_schemas.items():
 
                 attributes = resource_schema.get("block").get("attributes")
-                attributes = [a for a in attributes if attributes.get(a).get("required") == True]
+                attributes = [
+                    a for a in attributes if attributes.get(a).get("required") == True
+                ]
 
                 snippet = template.render(
                     thing="resource",
                     thing_short="r",
                     name=resource_name,
-                    enumerated_attributes=enumerate(
-                        attributes, start=2
-                    ),
+                    enumerated_attributes=enumerate(attributes, start=2),
                 )
 
-                with open(
-                    f"snippets/terraform-mode/r_{resource_name}", "w"
-                ) as f:
+                filename = f"snippets/terraform-mode/{dir_entry.name}/resource/r_{resource_name}"
+                os.makedirs(os.path.dirname(filename), exist_ok=True)
+                with open(filename, "w") as f:
                     f.write(snippet)
 
             for data_source_name, data_source_schema in data_source_schemas.items():
 
                 attributes = data_source_schema.get("block").get("attributes")
-                attributes = [a for a in attributes if attributes.get(a).get("required") == True]
+                attributes = [
+                    a for a in attributes if attributes.get(a).get("required") == True
+                ]
 
                 snippet = template.render(
                     thing="data",
                     thing_short="d",
                     name=data_source_name,
-                    enumerated_attributes=enumerate(
-                        attributes, start=2
-                    ),
+                    enumerated_attributes=enumerate(attributes, start=2),
                 )
 
-                with open(
-                    f"snippets/terraform-mode/d_{data_source_name}",
-                    "w",
-                ) as f:
+                filename = f"snippets/terraform-mode/{dir_entry.name}/data/d_{data_source_name}"
+                os.makedirs(os.path.dirname(filename), exist_ok=True)
+                with open(filename, "w") as f:
                     f.write(snippet)
+
+    pathlib.Path("snippets/terraform-mode/.yas-make-groups").touch()
 
 
 if __name__ == "__main__":
