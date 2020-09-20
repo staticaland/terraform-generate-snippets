@@ -35,3 +35,9 @@ graph TD
   E -->|Save schema| G
   G --> H[Template and save snippet]
 ```
+
+## `generate_snippets -h`
+
+```{.bash .cb.run show=stdout:verbatim}
+poetry run python generate_snippets.py -h
+```

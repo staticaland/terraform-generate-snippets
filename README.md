@@ -27,3 +27,15 @@ Snippet documentation for various editors:
 ## Flow
 
 ![](img/snippets.png)
+
+## `generate_snippets -h`
+
+``` stdout
+usage: generate_snippets.py [-h] {generate_snippets,make_provider_dirs} ...
+
+positional arguments:
+  {generate_snippets,make_provider_dirs}
+
+optional arguments:
+  -h, --help            show this help message and exit
+```
