@@ -19,7 +19,7 @@ Snippet documentation for various editors:
 - [VSCode](https://code.visualstudio.com/docs/editor/userdefinedsnippets) follows the TextMate snippet syntax
 
 
-```{.mermaid loc=img format=svg filename=snippets}
+```{.mermaid loc=img format=svg filename=snippets width=400}
 graph TD
   A[make_provider_dirs.py] -->|Creates directories| B(generate_snippets.py)
   B --> C{Do we have the provider plugin?}
