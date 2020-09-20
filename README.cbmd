@@ -20,7 +20,7 @@ Snippet documentation for various editors:
 
 
 ```{.mermaid loc=img format=svg filename=snippets width=400}
-graph TD
+graph LR
   A[make_provider_dirs.py] -->|Creates directories| B(generate_snippets.py)
   B --> C{Do we have the provider plugin?}
   C -->|Yes| D[Run `terraform providers schema -json`]
