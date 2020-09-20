@@ -12,9 +12,11 @@ creates snippet files based on the JSON.
 folders and Terraform files for all of them (every Terraform file in the
 `providers` directory).
 
-`generate_snippets.py generate_snippets` run `terraform providers schema -json`
-(and `terraform init` if needed). It will take quite a lot of disk space and
-time to do the initial run. Subsequent runs should be fast as the latest schema version is saved to disk.
+Once you have a bunch of provider folders, `generate_snippets.py
+generate_snippets` will loop through all of them and run `terraform providers
+schema -json` (and `terraform init` if needed). It will take quite a lot of disk
+space and time to do the initial run. Subsequent runs should be fast as the
+latest schema version is saved to disk.
 
 It should be fairly trivial to extend this to support multiple snippet systems.
 
