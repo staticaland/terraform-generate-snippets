@@ -5,8 +5,8 @@ import os
 import requests
 import jinja2
 
-url = "https://registry.terraform.io/v2/providers?page[number]={page}&page[size]=100"
-version_url = (
+URL = "https://registry.terraform.io/v2/providers?page[number]={page}&page[size]=100"
+VERSION_URL = (
     "https://registry.terraform.io/v2/providers/{id}?include=provider-versions"
 )
 
@@ -19,10 +19,8 @@ JINJA_TEMPLATE = """terraform {
   }
 }
 
-
+provider "[[name]]" {}
 """
-
-# Probably need to create a versions file instead
 
 environment = jinja2.Environment(
     loader=jinja2.BaseLoader(),
@@ -38,7 +36,7 @@ template = environment.from_string(JINJA_TEMPLATE)
 
 for i in range(4):
 
-    r = requests.get(url.format(page=i))
+    r = requests.get(URL.format(page=i))
 
     for r in r.json().get("data"):
 
@@ -49,7 +47,7 @@ for i in range(4):
         if provider_name in ["terraform"]:
             continue
 
-        r = requests.get(version_url.format(id=provider_id))
+        r = requests.get(VERSION_URL.format(id=provider_id))
 
         provider_version = r.json().get("included")
 
@@ -64,16 +62,12 @@ for i in range(4):
 
         os.makedirs(os.path.dirname(filename), exist_ok=True)
 
-        provider_block = f'provider "{provider_name}" {{}}'
-
         with open(filename, "w") as f:
 
-            required_providers_block = template.render(
+            provider_block = template.render(
                 name=provider_name,
                 full_name=provider_full_name,
                 version=provider_version,
             )
-
-            f.write(required_providers_block)
 
             f.write(provider_block)
