@@ -7,9 +7,10 @@ works by parsing [`terraform providers schema
 -json`](https://www.terraform.io/docs/commands/providers/schema.html) and
 creates snippet files based on the JSON.
 
-`generate_snippets.py make_provider_dirs` looks up all providers from the
+`generate_snippets.py make_provider_dirs` looks up all the providers from the
 [Terraform registry API](https://registry.terraform.io/v2/providers) and creates
-folders and Terraform files for all of them.
+folders and Terraform files for all of them (every Terraform file in the
+`providers` directory).
 
 `generate_snippets.py generate_snippets` run `terraform providers schema -json`
 (and `terraform init` if needed). It will take quite a lot of disk space and
