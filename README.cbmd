@@ -26,7 +26,7 @@ Snippet documentation for various editors:
 
 ```{.mermaid loc=img format=png filename=snippets width=400}
 graph TD
-  B[generate_snippets.py] --> C{Do we have the schema saved?}
+  B[generate_snippets.py] -->|Loop for every provider| C{Do we have the schema saved?}
   C -->|No| D{Do we have the provider plugin?}
   C -->|Yes| G{Load JSON}
   D -->|Yes| E[Run `terraform providers schema -json`]

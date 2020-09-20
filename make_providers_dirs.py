@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import argparse
 
 import requests
 import jinja2
@@ -22,52 +23,54 @@ JINJA_TEMPLATE = """terraform {
 provider "[[name]]" {}
 """
 
-environment = jinja2.Environment(
-    loader=jinja2.BaseLoader(),
-    block_start_string="[%",
-    block_end_string="%]",
-    variable_start_string="[[",
-    variable_end_string="]]",
-    autoescape=False,
-    trim_blocks=True,
-)
 
-template = environment.from_string(JINJA_TEMPLATE)
+def make_providers_dirs(args):
 
-for i in range(4):
+    environment = jinja2.Environment(
+        loader=jinja2.BaseLoader(),
+        block_start_string="[%",
+        block_end_string="%]",
+        variable_start_string="[[",
+        variable_end_string="]]",
+        autoescape=False,
+        trim_blocks=True,
+    )
 
-    r = requests.get(URL.format(page=i))
+    template = environment.from_string(JINJA_TEMPLATE)
 
-    for r in r.json().get("data"):
+    for i in range(4):
 
-        provider_id = r.get("id")
-        provider_name = r.get("attributes").get("name")
-        provider_full_name = r.get("attributes").get("full-name")
+        r = requests.get(URL.format(page=i))
 
-        if provider_name in ["terraform"]:
-            continue
+        for r in r.json().get("data"):
 
-        r = requests.get(VERSION_URL.format(id=provider_id))
+            provider_id = r.get("id")
+            provider_name = r.get("attributes").get("name")
+            provider_full_name = r.get("attributes").get("full-name")
 
-        provider_version = r.json().get("included")
+            if provider_name in ["terraform"]:
+                continue
 
-        # breakpoint()
-        provider_version = sorted(
-            provider_version, key=lambda r: r.get("attributes").get("published-at")
-        )
+            r = requests.get(VERSION_URL.format(id=provider_id))
 
-        provider_version = provider_version[-1].get("attributes").get("version")
+            provider_version = r.json().get("included")
 
-        filename = f"providers/{provider_name}/{provider_name}.tf"
-
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
-
-        with open(filename, "w") as f:
-
-            provider_block = template.render(
-                name=provider_name,
-                full_name=provider_full_name,
-                version=provider_version,
+            provider_version = sorted(
+                provider_version, key=lambda r: r.get("attributes").get("published-at")
             )
 
-            f.write(provider_block)
+            provider_version = provider_version[-1].get("attributes").get("version")
+
+            filename = f"providers/{provider_name}/{provider_name}.tf"
+
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+
+            with open(filename, "w") as f:
+
+                provider_block = template.render(
+                    name=provider_name,
+                    full_name=provider_full_name,
+                    version=provider_version,
+                )
+
+                f.write(provider_block)
