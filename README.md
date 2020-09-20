@@ -26,8 +26,4 @@ Snippet documentation for various editors:
 
 ## Flow
 
-<p align="center">
-
 ![](img/snippets.png)
-
-</p>

@@ -24,7 +24,6 @@ Snippet documentation for various editors:
 
 ## Flow
 
-<p align="center">
 ```{.mermaid loc=img format=png filename=snippets width=400}
 graph TD
   B[generate_snippets.py] --> C{Do we have the schema saved?}
@@ -33,7 +32,6 @@ graph TD
   D -->|Yes| E[Run `terraform providers schema -json`]
   D -->|No| F[Run `terraform init`]
   F --> E
-  E -->|Save it| G
+  E -->|Save schema| G
   G --> H[Template and save snippet]
 ```
-</p>
