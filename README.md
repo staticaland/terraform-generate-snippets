@@ -1,3 +1,5 @@
+# terraform-generate-snippets
+
 Generate editor snippets based on Terraform provider schemas (such as
 [AWS](https://github.com/terraform-providers/terraform-provider-aws/tree/master/aws)).
 
@@ -19,4 +21,4 @@ Snippet documentation for various editors:
   - [VSCode](https://code.visualstudio.com/docs/editor/userdefinedsnippets)
     follows the TextMate snippet syntax
 
-![](img/snippets.svg)
+![](img/snippets.png)
