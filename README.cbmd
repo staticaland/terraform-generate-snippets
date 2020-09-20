@@ -29,6 +29,6 @@ graph TD
   D -->|Yes| E[Run `terraform providers schema -json`]
   D -->|No| F[Run `terraform init`]
   F --> E
-  E --> G
+  E -->|Save it| G
   G --> H[Template and save snippet]
 ```
