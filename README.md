@@ -5,13 +5,13 @@ Works by parsing [`terraform providers schema
 -json`](https://www.terraform.io/docs/commands/providers/schema.html) and
 creates snippet files based on the JSON.
 
-- [x] YASnippet support
-- [x] Support templates for multiple engines
-- [ ] Only keep required attributes
+`generate_snippets.py` run `terraform providers schema -json` (and `terraform
+init` if needed). It will take quite a lot of disk space and time to do the
+initial run.
 
-Currently only supporting AWS and Azure for
-[YASnippet](https://github.com/joaotavora/yasnippet), but should be fairly easy
-to extend (just create a provider folder).
+`make_providers_dirs.py` looks up all providers from the Terraform registry API
+(https://registry.terraform.io/v2/providers) and creates folders and Terraform
+files for all of them.
 
 Snippet documentation for various editors:
 
