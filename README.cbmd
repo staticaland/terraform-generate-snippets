@@ -2,25 +2,20 @@
 
 The source of [yasnippet-terraform](https://github.com/staticaland/yasnippet-terraform).
 
-Generate editor snippets based on Terraform provider schemas (such as
-[AWS](https://github.com/terraform-providers/terraform-provider-aws/tree/master/aws)).
-
-Works by parsing [`terraform providers schema
+This script generates YASnippet snippets based on Terraform provider schemas. It
+works by parsing [`terraform providers schema
 -json`](https://www.terraform.io/docs/commands/providers/schema.html) and
 creates snippet files based on the JSON.
 
-`generate_snippets.py` run `terraform providers schema -json` (and `terraform
-init` if needed). It will take quite a lot of disk space and time to do the
-initial run.
+`generate_snippets.py make_provider_dirs` looks up all providers from the
+[Terraform registry API](https://registry.terraform.io/v2/providers) and creates
+folders and Terraform files for all of them.
 
-`make_providers_dirs.py` looks up all providers from the Terraform registry API
-(https://registry.terraform.io/v2/providers) and creates folders and Terraform
-files for all of them.
+`generate_snippets.py generate_snippets` run `terraform providers schema -json`
+(and `terraform init` if needed). It will take quite a lot of disk space and
+time to do the initial run. Subsequent runs should be fast as the latest schema version is saved to disk.
 
-Snippet documentation for various editors:
-
-- [YASnippet](https://joaotavora.github.io/yasnippet/snippet-development.html)
-- [VSCode](https://code.visualstudio.com/docs/editor/userdefinedsnippets) follows the TextMate snippet syntax
+It should be fairly trivial to extend this to support multiple snippet systems.
 
 ## Flow
 
@@ -36,8 +31,15 @@ graph TD
   G --> H[Template and save snippet]
 ```
 
-## `generate_snippets -h`
+## `generate_snippets.py -h`
 
 ```{.bash .cb.run show=stdout:verbatim}
 poetry run python generate_snippets.py -h
 ```
+
+## Other
+
+Snippet documentation for various editors:
+
+- [YASnippet](https://joaotavora.github.io/yasnippet/snippet-development.html)
+- [VSCode](https://code.visualstudio.com/docs/editor/userdefinedsnippets) follows the TextMate snippet syntax
