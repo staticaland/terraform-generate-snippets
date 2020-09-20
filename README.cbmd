@@ -22,7 +22,9 @@ Snippet documentation for various editors:
 - [YASnippet](https://joaotavora.github.io/yasnippet/snippet-development.html)
 - [VSCode](https://code.visualstudio.com/docs/editor/userdefinedsnippets) follows the TextMate snippet syntax
 
+## Flow
 
+<p align="center">
 ```{.mermaid loc=img format=png filename=snippets width=400}
 graph TD
   B[generate_snippets.py] --> C{Do we have the schema saved?}
@@ -34,3 +36,4 @@ graph TD
   E -->|Save it| G
   G --> H[Template and save snippet]
 ```
+</p>

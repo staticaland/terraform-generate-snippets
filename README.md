@@ -24,4 +24,10 @@ Snippet documentation for various editors:
   - [VSCode](https://code.visualstudio.com/docs/editor/userdefinedsnippets)
     follows the TextMate snippet syntax
 
+## Flow
+
+<p align="center">
+
 ![](img/snippets.png)
+
+</p>
