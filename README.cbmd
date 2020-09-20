@@ -23,11 +23,12 @@ Snippet documentation for various editors:
 
 ```{.mermaid loc=img format=png filename=snippets width=400}
 graph TD
-  A[make_provider_dirs.py] -->|Creates dirs| B(generate_snippets.py)
-  B --> C{Do we have the provider plugin?}
-  C -->|Yes| D[Run `terraform providers schema -json`]
-  C -->|No| E[Run `terraform init`]
-  E --> D
-  D --> F[Load JSON]
-  F --> G[Template and save snippet]
+  B[generate_snippets.py] --> C{Do we have the schema saved?}
+  C -->|No| D{Do we have the provider plugin?}
+  C -->|Yes| G{Load JSON}
+  D -->|Yes| E[Run `terraform providers schema -json`]
+  D -->|No| F[Run `terraform init`]
+  F --> E
+  E --> G
+  G --> H[Template and save snippet]
 ```
